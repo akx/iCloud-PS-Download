@@ -1,0 +1,17 @@
+[project]
+name = "iCloud-PS-Download"
+version = "0.1.0"
+readme = "README.md"
+authors = []
+requires-python = ">=3.10"
+dependencies = ["requests"]
+
+[project.scripts]
+icloudbd = "icloudbd:main"
+
+[tool.hatch.build.targets.wheel]
+packages = ["iCloudBD"]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"

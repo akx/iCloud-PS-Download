@@ -11,7 +11,7 @@ def get_stream_contents(stream_id, mme_host='p13-sharedstreams.icloud.com'):
     """Gets available assets"""
     base_url = 'https://' + mme_host + '/' + stream_id + '/sharedstreams/'
     url = base_url + 'webstream'
-    print('Getting photo list...')
+    print('Getting photo list from %s...' % url)
     r = requests.post(url, data=json.dumps({"streamCtag": None}))
     stream_data = r.json()
 
