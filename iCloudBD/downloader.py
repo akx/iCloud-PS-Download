@@ -17,22 +17,18 @@ def download_item(item, sess=None):
 
     os.makedirs(os.path.dirname(item.file_name), exist_ok=True)
     if os.path.exists(item.file_name):
-        print("Already exists: %s" % item.file_name)
+        print(f"Already exists: {item.file_name}")
         return False
 
     print(
-        "Downloading photo %s derivative %s to %s (%s bytes)"
-        % (
-            item.template_namespace["photo_guid"],
-            item.template_namespace["derivative_id"],
-            item.file_name,
-            item.derivative["fileSize"],
-        )
+        f"Downloading photo {item.template_namespace['photo_guid']} "
+        f"derivative {item.template_namespace['derivative_id']} "
+        f"to {item.file_name} ({item.derivative['fileSize']} bytes)",
     )
     r = sess.get(item.url, stream=True)
     r.raise_for_status()
 
-    temp_name = item.file_name + ".tmp-%s" % time.time()
+    temp_name = f"{item.file_name}.tmp-{time.time()}"
     try:
         with open(temp_name, "wb") as f:
             for chunk in r.iter_content(chunk_size=512 * 1024):
@@ -43,7 +39,7 @@ def download_item(item, sess=None):
     finally:
         try:
             os.unlink(temp_name)
-        except IOError:
+        except OSError:
             pass
     return r
 
@@ -53,7 +49,7 @@ def perform_download(download_items, parallel=0):
         import multiprocessing
 
         with multiprocessing.Pool(
-            processes=parallel, initializer=subprocess_initializer
+            processes=parallel, initializer=subprocess_initializer,
         ) as p:
             for result in p.imap_unordered(download_item, download_items, chunksize=10):
                 pass

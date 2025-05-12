@@ -44,7 +44,7 @@ def main():
     if args.dump_json:
         with open(args.dump_json, "w") as dump_file:
             json.dump(stream_contents, dump_file, sort_keys=True, indent=2)
-            print("Wrote metadata to %s" % dump_file.name)
+            print(f"Wrote metadata to {dump_file.name}")
 
     if not args.no_download:
         download_items = list(
@@ -52,7 +52,7 @@ def main():
                 stream_contents,
                 filename_template=args.download_filename_template,
                 all_derivatives=args.all_derivatives,
-            )
+            ),
         )
         perform_download(download_items, parallel=args.parallel)
     else:

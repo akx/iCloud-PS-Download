@@ -2,7 +2,7 @@ import os.path
 from collections import namedtuple
 
 DownloadItem = namedtuple(
-    "DownloadItem", ("file_name", "url", "photo", "derivative", "template_namespace")
+    "DownloadItem", ("file_name", "url", "photo", "derivative", "template_namespace"),
 )
 
 
@@ -24,7 +24,7 @@ def generate_download_items(stream_contents, filename_template, all_derivatives=
             try:
                 item = stream_contents["items"][item_id]
             except KeyError:
-                print("Missing item %s" % item_id)
+                print(f"Missing item {item_id}")
                 continue
             original_filename = os.path.basename(item["url_path"].split("?")[0])
             template_namespace = {
@@ -33,7 +33,7 @@ def generate_download_items(stream_contents, filename_template, all_derivatives=
                 "photo_guid": photo["photoGuid"],
                 "item_id": item_id,
                 "photo_index": index,
-                "photo_index_padded": "%05d" % index,
+                "photo_index_padded": f"{int(index):05}",
                 "derivative_id": derivative["id"],
                 "original_filename": original_filename,
                 "original_extension": os.path.splitext(original_filename)[1],
@@ -41,7 +41,7 @@ def generate_download_items(stream_contents, filename_template, all_derivatives=
 
             file_name = filename_template.format(**template_namespace)
             host = locations[item["url_location"]]["hosts"][0]
-            url = "https://" + host + item["url_path"]
+            url = f"https://{host}{item['url_path']}"
 
             yield DownloadItem(
                 file_name=file_name,
